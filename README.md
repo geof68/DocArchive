@@ -114,18 +114,5 @@ A `docarchive_log.csv` file is created with the following columns:
 
 ---
 
-## TODO / Future Improvements
-
-- Graphical interface
-- Support for Google OCR fallback
-- Automatic email attachment extraction
-
----
-
-## Author
-
-Geoffrey | MIT License
-
----
 
 **Note**: For proper support of accents and French text, ensure Tesseract is installed with the required language data.
