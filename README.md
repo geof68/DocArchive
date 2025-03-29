@@ -72,6 +72,7 @@ The account must have `bedrock:InvokeModel` permission on Claude 3 Haiku.
 - Enable the Google Drive API
 - Create a service account with the `Editor` role
 - Generate a JSON key (e.g., `docarchive-creds.json`)
+- Place the JSON key file in the same directory as the script or specify the correct path in the script parameter `credentials_path`
 - Share the root Drive folder with the service account's email
 - Set the folder's ID in `ROOT_FOLDER_ID`
 
@@ -114,5 +115,10 @@ A `docarchive_log.csv` file is created with the following columns:
 
 ---
 
+## Author
+
+Geoffray | MIT License
+
+---
 
 **Note**: For proper support of accents and French text, ensure Tesseract is installed with the required language data.
