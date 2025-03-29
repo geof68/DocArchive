@@ -86,7 +86,7 @@ Create a `.env` file in the same directory as `docarchive.py`:
 ```env
 # .env
 ROOT_FOLDER_ID=your_drive_folder_id
-GOOGLE_CREDENTIALS_PATH=docarchive-XXXX.json
+GOOGLE_CREDENTIALS_PATH=XXXX.json
 ```
 
 The script will automatically load this file at runtime using `python-dotenv`.

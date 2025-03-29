@@ -14,6 +14,8 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import dateutil.parser
 from botocore.exceptions import BotoCoreError, ClientError
+from dotenv import load_dotenv
+
 
 # Chargement de l'ID du dossier racine Google Drive depuis une variable d'environnement
 ROOT_FOLDER_ID = os.getenv("ROOT_FOLDER_ID", "root")  # "root" par défaut
@@ -131,7 +133,10 @@ def get_or_create_folder(service, name, parent_id=None):
     return folder['id']
 
 def upload_to_drive(pdf_path, metadata):
-    credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH", "credentials.json")
+    credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH")
+    if not credentials_path:
+        raise RuntimeError(
+            "La variable d'environnement GOOGLE_CREDENTIALS_PATH n'est pas définie. Vérifie ton fichier .env.")
 
     creds = service_account.Credentials.from_service_account_file(
         credentials_path, scopes=['https://www.googleapis.com/auth/drive']
@@ -227,6 +232,7 @@ if __name__ == "__main__":
         print("Usage: python docarchive.py <chemin_du_pdf_ou_dossier> [--dry-run]")
         sys.exit(1)
 
+    load_dotenv()
 
     target_path = sys.argv[1]
     dry_run = "--dry-run" in sys.argv
