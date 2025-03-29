@@ -15,7 +15,8 @@ from googleapiclient.http import MediaFileUpload
 import dateutil.parser
 from botocore.exceptions import BotoCoreError, ClientError
 
-ROOT_FOLDER_ID = "1AWUJWmcHJPq4-WNQOBKkzjqIZKiUDGPa"
+# Chargement de l'ID du dossier racine Google Drive depuis une variable d'environnement
+ROOT_FOLDER_ID = os.getenv("ROOT_FOLDER_ID", "root")  # "root" par défaut
 
 # === 1. OCR ===
 def extract_text_from_pdf(pdf_path):
@@ -129,7 +130,9 @@ def get_or_create_folder(service, name, parent_id=None):
     folder = service.files().create(body=metadata, fields='id').execute()
     return folder['id']
 
-def upload_to_drive(pdf_path, metadata, credentials_path="docarchive-455109-13f17a889067.json"):
+def upload_to_drive(pdf_path, metadata):
+    credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH", "credentials.json")
+
     creds = service_account.Credentials.from_service_account_file(
         credentials_path, scopes=['https://www.googleapis.com/auth/drive']
     )

@@ -13,7 +13,6 @@ This Python script automates OCR, document analysis using Amazon Bedrock, and PD
 
 ## Prerequisites
 
-
 ### macOS
 
 - [Homebrew](https://brew.sh)
@@ -51,6 +50,7 @@ google-auth
 google-auth-oauthlib
 python-dateutil
 pymupdf
+python-dotenv
 ```
 
 ### 3. Configure AWS CLI
@@ -72,10 +72,24 @@ The account must have `bedrock:InvokeModel` permission on Claude 3 Haiku.
 - Create a GCP project
 - Enable the Google Drive API
 - Create a service account with the `Editor` role
-- Generate a JSON key (e.g., `docarchive-creds.json`)
-- Place the JSON key file in the same directory as the script or specify the correct path in the script parameter `credentials_path`
+- Generate a JSON key (e.g., `docarchive-XXXX.json`)
+- Place the JSON key file in the same directory as the script
 - Share the root Drive folder with the service account's email
-- Set the folder's ID in `ROOT_FOLDER_ID`
+- Copy the folder's ID
+
+---
+
+### 5. Environment variables
+
+Create a `.env` file in the same directory as `docarchive.py`:
+
+```env
+# .env
+ROOT_FOLDER_ID=your_drive_folder_id
+GOOGLE_CREDENTIALS_PATH=docarchive-XXXX.json
+```
+
+The script will automatically load this file at runtime using `python-dotenv`.
 
 ---
 
@@ -122,4 +136,4 @@ Geoffray | MIT License
 
 ---
 
-**Note**: For proper support of accents and French text, ensure Tesseract is installed with the required language data.
+**Note**: For proper support of accents and French text, ensure Tesseract is installed with the required language data (`fra`).
