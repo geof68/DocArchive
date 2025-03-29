@@ -227,6 +227,7 @@ if __name__ == "__main__":
         print("Usage: python docarchive.py <chemin_du_pdf_ou_dossier> [--dry-run]")
         sys.exit(1)
 
+
     target_path = sys.argv[1]
     dry_run = "--dry-run" in sys.argv
 
