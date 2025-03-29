@@ -13,6 +13,7 @@ This Python script automates OCR, document analysis using Amazon Bedrock, and PD
 
 ## Prerequisites
 
+
 ### macOS
 
 - [Homebrew](https://brew.sh)
