@@ -1,6 +1,6 @@
-# DocArchive
+# DocArchive – Automated Archiving of Scanned Documents to Google Drive
 
-This Python script automates OCR, document analysis using Amazon Bedrock, and PDF archiving in Google Drive with structured metadata.
+This Python script automates the structured archiving of scanned PDF documents into Google Drive. Its goal is to simplify and streamline the process of storing paper-based documents in a digital format with consistent organization and metadata.
 
 ## Features
 
