@@ -132,7 +132,7 @@ A `docarchive_log.csv` file is created with the following columns:
 
 ## Author
 
-Geoffray Schmitt | MIT License
+Geoffray | MIT License
 
 ---
 
