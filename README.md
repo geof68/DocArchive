@@ -132,8 +132,10 @@ A `docarchive_log.csv` file is created with the following columns:
 
 ## Author
 
-Geoffray | MIT License
+Geoffray  | MIT License
 
 ---
 
 **Note**: For proper support of accents and French text, ensure Tesseract is installed with the required language data (`fra`).
+
+
