@@ -16,7 +16,6 @@ import dateutil.parser
 from botocore.exceptions import BotoCoreError, ClientError
 from dotenv import load_dotenv
 
-
 # Chargement de l'ID du dossier racine Google Drive depuis une variable d'environnement
 ROOT_FOLDER_ID = os.getenv("ROOT_FOLDER_ID", "root")  # "root" par défaut
 
@@ -114,7 +113,7 @@ def escape_drive_name(name):
 
 def get_or_create_folder(service, name, parent_id=None):
     if parent_id is None:
-        parent_id = ROOT_FOLDER_ID
+        parent_id = "1AWUJWmcHJPq4-WNQOBKkzjqIZKiUDGPa"
 
     escaped_name = escape_drive_name(name)
     query = f"mimeType='application/vnd.google-apps.folder' and name='{escaped_name}' and '{parent_id}' in parents"
@@ -130,46 +129,63 @@ def get_or_create_folder(service, name, parent_id=None):
     }
 
     folder = service.files().create(body=metadata, fields='id').execute()
+
     return folder['id']
 
 def upload_to_drive(pdf_path, metadata):
     credentials_path = os.getenv("GOOGLE_CREDENTIALS_PATH")
     if not credentials_path:
-        raise RuntimeError(
-            "La variable d'environnement GOOGLE_CREDENTIALS_PATH n'est pas définie. Vérifie ton fichier .env.")
+        raise RuntimeError("La variable d'environnement GOOGLE_CREDENTIALS_PATH n'est pas définie. Vérifie ton fichier .env.")
 
+    # Authentification
     creds = service_account.Credentials.from_service_account_file(
         credentials_path, scopes=['https://www.googleapis.com/auth/drive']
     )
     service = build('drive', 'v3', credentials=creds)
 
+    print(f"   🔍 Fichier uploadé dans le Drive du compte : {creds.service_account_email}")
+
+    # Préparation des dossiers
     doc_type = metadata.get("type", "Inconnu")
     year = get_file_year(pdf_path)
 
     type_folder_id = get_or_create_folder(service, doc_type)
     year_folder_id = get_or_create_folder(service, year, type_folder_id)
 
+    # Préparation du texte descriptif
     description_text = (
         f"Type : {metadata.get('type', 'Inconnu')}\n"
         f"Organisation : {metadata.get('organisation', 'Inconnue')}\n\n"
         f"{metadata.get('description', '')}"
     )
 
+    # Génération du nom de fichier unique
     unique_id = str(uuid.uuid4())[:8]
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     type_clean = doc_type.replace("/", "-").strip()
     org_clean = metadata.get('organisation', 'Inconnu').replace("/", "-").strip()
-    filename = f"{type_clean} - {org_clean} - {unique_id}.pdf"
+    filename = f"{type_clean} - {org_clean} - {timestamp}-{unique_id}.pdf"
 
+    # Upload du fichier
     file_metadata = {
         'name': filename,
         'parents': [year_folder_id],
         'description': description_text
     }
-
     media = MediaFileUpload(pdf_path, mimetype='application/pdf')
     file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
+    # Rendre le fichier accessible par lien (lecture seule)
+    service.permissions().create(
+        fileId=file['id'],
+        body={
+            'type': 'anyone',
+            'role': 'reader'
+        }
+    ).execute()
+
     return file.get("id"), filename
+
 
 # === 4. Logging ===
 def log_entry(uploaded_filename, metadata):
